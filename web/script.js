@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById("saveBtn");
   const countdownEl = document.getElementById("countdown");
 
-  let count = parseInt(localStorage.getItem("score")) || 0;
+  let scoreRaw = localStorage.getItem("score");
+  let count = scoreRaw !== null ? parseInt(scoreRaw) : 0;
   counter.textContent = count;
 
   const user = tg.initDataUnsafe?.user;
@@ -16,7 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
       `👋 سلام ${user.first_name || "کاربر"}!`;
   }
 
-  const startTime = parseInt(localStorage.getItem("startTime"));
+  const startRaw = localStorage.getItem("startTime");
+  const startTime = startRaw !== null ? parseInt(startRaw) : null;
 
   if (startTime) {
     const timePassed = Date.now() - startTime;
@@ -49,14 +51,17 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.close();
   });
 
+  let countdownInterval = null;
+
   function showCountdown(timeLeft) {
+    clearInterval(countdownInterval);
     updateCountdown(timeLeft);
 
-    const interval = setInterval(() => {
+    countdownInterval = setInterval(() => {
       timeLeft -= 1000;
 
       if (timeLeft <= 0) {
-        clearInterval(interval);
+        clearInterval(countdownInterval);
         countdownEl.textContent = "";
         clickBtn.disabled = false;
         localStorage.removeItem("startTime");
