@@ -1,6 +1,13 @@
-let count = 0;
+document.addEventListener("DOMContentLoaded", () => {
+  let count = 0;
 
-document.getElementById("clickBtn").addEventListener("click", () => {
-  count++;
-  document.getElementById("count").innerText = count;
+  const btn = document.getElementById("clickBtn");
+  const counter = document.getElementById("count");
+
+  if (btn && counter) {
+    btn.addEventListener("click", () => {
+      count++;
+      counter.innerText = count;
+    });
+  }
 });
