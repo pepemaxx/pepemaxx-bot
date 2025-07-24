@@ -1,13 +1,27 @@
-document.addEventListener("DOMContentLoaded", () => {
-  let count = 0;
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-  const btn = document.getElementById("clickBtn");
-  const counter = document.getElementById("count");
+let count = localStorage.getItem('score') || 0;
+const counter = document.getElementById("count");
+const clickBtn = document.getElementById("clickBtn");
+const saveBtn = document.getElementById("saveBtn");
 
-  if (btn && counter) {
-    btn.addEventListener("click", () => {
-      count++;
-      counter.innerText = count;
-    });
-  }
+// نمایش نام کاربر
+if (tg.initDataUnsafe?.user) {
+  document.getElementById("username").textContent = 
+    `👋 ${tg.initDataUnsafe.user.first_name || 'کاربر'}!`;
+}
+
+// مدیریت کلیک
+clickBtn.addEventListener("click", () => {
+  count++;
+  counter.textContent = count;
+  tg.HapticFeedback.impactOccurred("light");
+});
+
+// ذخیره امتیاز
+saveBtn.addEventListener("click", () => {
+  localStorage.setItem('score', count);
+  tg.sendData(JSON.stringify({ score: count }));
+  tg.close();
 });
