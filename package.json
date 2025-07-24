@@ -1,6 +1,7 @@
 {
   "name": "pepemaxx-bot",
   "version": "1.0.0",
+  "description": "PepeMaxx Telegram Clicker Bot deployed on Vercel",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
