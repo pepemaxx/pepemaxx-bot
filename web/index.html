@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PepeMaxx Game</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PepeMaxx</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>👋 خوش آمدی!</h1>
-    <p>تعداد کلیک‌های شما:</p>
-    <div id="count">0</div>
-    <button id="clickBtn">👆 کلیک کن!</button>
+    <h1 id="username">👋 به بازی خوش آمدید!</h1>
+    <div id="count" class="counter">0</div>
+    <button id="clickBtn" class="click-button">👆 کلیک کن!</button>
+    <button id="saveBtn" class="save-button">ذخیره و خروج</button>
   </div>
-
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
