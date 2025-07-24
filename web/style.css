@@ -1,23 +1,49 @@
 body {
   background: #17212b;
-  color: white;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif;
+  margin: 0;
+  padding: 0;
   text-align: center;
-  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  direction: rtl;
 }
 
-.click-button {
-  background: #5288c1;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: none;
-  color: white;
+.container {
+  max-width: 400px;
+  width: 90%;
+  padding: 20px;
+}
+
+h1 {
   font-size: 1.5rem;
-  margin: 20px;
-  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .counter {
   font-size: 3rem;
-  margin: 20px;
+  margin: 20px 0;
+}
+
+.click-button,
+.save-button {
+  background: #5288c1;
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background 0.2s;
+  width: 80%;
+  max-width: 300px;
+}
+
+.click-button:hover,
+.save-button:hover {
+  background: #4070a0;
 }
