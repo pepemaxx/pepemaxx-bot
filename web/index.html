@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>PepeMaxx</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
     <h1 id="username">👋 به بازی خوش آمدید!</h1>
+    <p>تعداد کلیک‌ها:</p>
     <div id="count" class="counter">0</div>
     <button id="clickBtn" class="click-button">👆 کلیک کن!</button>
-    <button id="saveBtn" class="save-button">ذخیره و خروج</button>
+    <button id="saveBtn" class="save-button">💾 ذخیره و خروج</button>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    // این بخش فقط وقتی داخل تلگرام هست اجرا میشه
+    window.onload = function () {
+      const tg = window.Telegram.WebApp;
+      tg.expand(); // تمام‌صفحه شدن
+      const user = tg.initDataUnsafe?.user;
+
+      if (user) {
+        document.getElementById("username").innerText =
+          `👋 سلام ${user.first_name}، خوش آمدی!`;
+      }
+    };
+  </script>
+  <script src="script.js" defer></script>
 </body>
 </html>
