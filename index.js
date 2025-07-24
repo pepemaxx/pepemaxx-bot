@@ -3,8 +3,9 @@ const { Telegraf } = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const clicks = {};
 
+// فرمان /start
 bot.start((ctx) => {
-  const id = ctx.chat.id;
+  const id = ctx.from.id;
   clicks[id] = 0;
   ctx.reply(
     `سلام ${ctx.from.first_name}!\nبه بازی PepeMaxx خوش آمدی!`,
@@ -16,8 +17,9 @@ bot.start((ctx) => {
   );
 });
 
+// کلیک روی دکمه
 bot.on("callback_query", (ctx) => {
-  const id = ctx.chat.id;
+  const id = ctx.from.id;
   if (!clicks[id]) clicks[id] = 0;
   clicks[id] += 1;
   ctx.editMessageText(
@@ -30,13 +32,22 @@ bot.on("callback_query", (ctx) => {
   );
 });
 
-// اجرای اصلی برای Vercel
+// تنظیم Webhook فقط یک بار (در پروژه اصلی بهتره در route جداگانه باشه)
+bot.telegram.setWebhook("https://x-bot.vercel.app");
+
+// هندلر Vercel
 module.exports = async (req, res) => {
   try {
-    await bot.handleUpdate(req.body);
-    res.status(200).send("OK");
+    if (req.method === "POST") {
+      await bot.handleUpdate(req.body);
+      return res.status(200).send("OK");
+    } else if (req.method === "GET") {
+      return res.status(200).send("Bot is running!");
+    } else {
+      return res.status(405).send("Method Not Allowed");
+    }
   } catch (err) {
     console.error("Error handling update:", err);
-    res.status(500).send("Something went wrong");
+    return res.status(500).send("Something went wrong");
   }
 };
