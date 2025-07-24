@@ -1,0 +1,28 @@
+body {
+  background-color: #101820;
+  color: #ffffff;
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+#count {
+  font-size: 3rem;
+  margin: 1rem 0;
+}
+
+#clickBtn {
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #00cc99;
+  color: white;
+  cursor: pointer;
+}
