@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const counter = document.getElementById("count");
   const clickBtn = document.getElementById("clickBtn");
   const saveBtn = document.getElementById("saveBtn");
+  const countdownEl = document.getElementById("countdown");
 
   let count = parseInt(localStorage.getItem("score")) || 0;
   counter.textContent = count;
 
-  // نمایش نام کاربر
   const user = tg.initDataUnsafe?.user;
   if (user) {
     document.getElementById("username").textContent =
@@ -18,19 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const startTime = parseInt(localStorage.getItem("startTime"));
 
-  // اگر تایمر قبلاً شروع شده
   if (startTime) {
     const timePassed = Date.now() - startTime;
     const timeLeft = 24 * 60 * 60 * 1000 - timePassed;
 
     if (timeLeft > 0) {
-      // هنوز تایمر ادامه داره
-      showCountdown(timeLeft);
       clickBtn.disabled = true;
+      showCountdown(timeLeft);
     } else {
-      // تایمر تمام شده
       localStorage.removeItem("startTime");
-      clickBtn.disabled = false;
     }
   }
 
@@ -54,26 +50,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function showCountdown(timeLeft) {
-    const countdownDiv = document.createElement("div");
-    countdownDiv.id = "countdown";
-    countdownDiv.style.marginTop = "15px";
-    document.querySelector(".container").appendChild(countdownDiv);
+    updateCountdown(timeLeft);
 
     const interval = setInterval(() => {
-      const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-      countdownDiv.textContent = `⏳ باقی‌مانده: ${hours}ساعت ${minutes}دقیقه ${seconds}ثانیه`;
-
       timeLeft -= 1000;
 
       if (timeLeft <= 0) {
         clearInterval(interval);
-        countdownDiv.remove();
-        localStorage.removeItem("startTime");
+        countdownEl.textContent = "";
         clickBtn.disabled = false;
+        localStorage.removeItem("startTime");
+        return;
       }
+
+      updateCountdown(timeLeft);
     }, 1000);
+  }
+
+  function updateCountdown(ms) {
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+    countdownEl.textContent = `⏳ زمان باقی‌مانده: ${hours}ساعت ${minutes}دقیقه ${seconds}ثانیه`;
   }
 });
