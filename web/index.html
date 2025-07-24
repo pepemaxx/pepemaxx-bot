@@ -5,19 +5,33 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>PepeMaxx</title>
+
+  <!-- استایل -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- تلگرام وب اپ -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- فونت فارسی (اختیاری ولی مفید) -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn-font@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    body { font-family: "Vazirmatn", sans-serif; }
+  </style>
 </head>
+
 <body>
   <div class="container">
     <h1 id="username">👋 به بازی خوش آمدید!</h1>
     <p>تعداد کلیک‌ها:</p>
     <div id="count" class="counter">0</div>
+
     <button id="clickBtn" class="click-button">👆 کلیک کن!</button>
     <button id="saveBtn" class="save-button">💾 ذخیره و خروج</button>
+
     <div id="countdown"></div>
   </div>
 
-  <script src="script.js" defer></script>
+  <!-- اجرای اسکریپت فقط بعد از بارگذاری کامل -->
+  <script src="script.js"></script>
 </body>
 </html>
