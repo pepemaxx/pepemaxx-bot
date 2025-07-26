@@ -1,65 +1,84 @@
+/* فونت و رنگ‌بندی */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+:root {
+    --primary: #FFD700;
+    --secondary: #1E90FF;
+    --dark: #0F0F0F;
+    --medium: #1A1A1A;
+    --light: #252525;
+    --text: #FFFFFF;
+}
+
 body {
-  background: #17212b;
-  color: #ffffff;
-  font-family: "Vazirmatn", sans-serif;
-  margin: 0;
-  padding: 0;
-  direction: rtl;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  text-align: center;
+    font-family: 'Rubik', sans-serif;
+    background-color: var(--dark);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
 }
 
-.container {
-  width: 90%;
-  max-width: 400px;
-  padding: 20px;
-  box-sizing: border-box;
+/* نوار تب‌ها */
+.tab-bar {
+    display: flex;
+    background-color: var(--medium);
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
 }
 
-h1 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
-  color: #ffd700;
+.tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #777;
+    padding: 8px 0;
+    transition: all 0.3s;
 }
 
-.counter {
-  font-size: 3rem;
-  margin: 20px 0;
-  font-weight: bold;
-  color: #00ffcc;
+.tab-btn.active {
+    color: var(--primary);
+    transform: translateY(-5px);
 }
 
-.click-button,
-.save-button {
-  background-color: #5288c1;
-  color: #fff;
-  font-size: 1.2rem;
-  padding: 15px 25px;
-  margin: 10px auto;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  width: 80%;
-  max-width: 300px;
-  transition: background-color 0.3s ease;
-  display: block;
+.tab-btn img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
 }
 
-.click-button:hover,
-.save-button:hover {
-  background-color: #4070a0;
+/* محتوای صفحات */
+.mining-container,
+.wallet-container,
+.quest-container,
+.friends-container {
+    padding: 80px 20px 60px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.click-button:disabled {
-  background-color: #888;
-  cursor: not-allowed;
+/* استایل‌های مشترک صفحات */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-#countdown {
-  font-size: 1.1rem;
-  color: #ffcc00;
-  margin-top: 15px;
+.pepe-img, .quest-pepe, .friends-pepe {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
 }
+
+.maxx-logo {
+    height: 40px;
+}
+
+/* استایل‌های خاص هر صفحه... */
+
+/* بقیه استایل‌ها مانند قبل */
