@@ -1,58 +1,25 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAXx - کوئست‌ها</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Daily Task - Maxx</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="tab-bar">
-        <a href="index.html" class="tab-btn">
-            <img src="assets/mining-icon.png" alt="Mining">
-            <span>ماینینگ</span>
-        </a>
-        <a href="wallet.html" class="tab-btn">
-            <img src="assets/wallet-icon.png" alt="Wallet">
-            <span>کیف پول</span>
-        </a>
-        <a href="quest.html" class="tab-btn active">
-            <img src="assets/quest-icon.png" alt="Quests">
-            <span>کوئست‌ها</span>
-        </a>
-        <a href="friends.html" class="tab-btn">
-            <img src="assets/friends-icon.png" alt="Friends">
-            <span>دوستان</span>
-        </a>
-    </div>
 
-    <div class="quest-container">
-        <div class="quest-header">
-            <img src="assets/pepe.png" alt="Pepe" class="quest-pepe">
-            <h2>کوئست‌های MAXx</h2>
-        </div>
+  <!-- نوار تب -->
+  <div class="tab-bar">
+    <a href="mining.html">Mining</a>
+    <a href="daily.html">Daily Task</a>
+    <a href="friends.html">Friends</a>
+    <a href="wallet.html">Wallet</a>
+  </div>
 
-        <div class="quest-section">
-            <h3 class="section-title">روزانه</h3>
-            <div class="quest-item completed">
-                <input type="checkbox" id="daily1" checked>
-                <label for="daily1">ورود روزانه</label>
-                <span class="reward">+20,000 سکه</span>
-                <span class="status-badge">تکمیل شد</span>
-            </div>
-        </div>
+  <!-- محتوای صفحه -->
+  <div class="content">
+    <h2>تسک‌های روزانه</h2>
+    <p>در این بخش، تسک‌های روزانه شما نمایش داده می‌شود.</p>
+  </div>
 
-        <div class="quest-section">
-            <h3 class="section-title">هفتگی</h3>
-            <div class="quest-item">
-                <input type="checkbox" id="weekly1">
-                <label for="weekly1">دعوت 3 دوست</label>
-                <span class="reward">+3 بلیط</span>
-                <span class="status-badge">جدید</span>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
