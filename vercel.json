@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/web/mining.html" }
+    { "source": "/", "destination": "/web/index.html" }
   ],
   "public": "web"
 }
