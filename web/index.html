@@ -1,62 +1,49 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAXx - ماینینگ</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بازی تلگرامی | خانه</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="tab-bar">
-        <a href="index.html" class="tab-btn active">
-            <img src="assets/mining-icon.png" alt="Mining">
-            <span>ماینینگ</span>
-        </a>
-        <a href="wallet.html" class="tab-btn">
-            <img src="assets/wallet-icon.png" alt="Wallet">
-            <span>کیف پول</span>
-        </a>
-        <a href="quest.html" class="tab-btn">
-            <img src="assets/quest-icon.png" alt="Quests">
-            <span>کوئست‌ها</span>
-        </a>
-        <a href="friends.html" class="tab-btn">
-            <img src="assets/friends-icon.png" alt="Friends">
-            <span>دوستان</span>
-        </a>
+  <div class="container">
+    <h1 class="page-title">خانه</h1>
+    
+    <div class="card">
+      <h2>وضعیت امروز</h2>
+      <p>امتیاز شما: <strong>1,200</strong></p>
+      <p>سطح: <strong>5</strong></p>
     </div>
-
-    <div class="mining-container">
-        <div class="header">
-            <img src="assets/pepe.png" alt="Pepe" class="pepe-img">
-            <img src="assets/maxx-logo.png" alt="MAXx" class="maxx-logo">
-        </div>
-
-        <div class="reward-box">
-            <p class="reward-value">16.27</p>
-            <p class="reward-label">هر ساعت</p>
-        </div>
-        
-        <div class="timer-box">
-            <p class="current-rate">0.1077</p>
-            <p class="timer">---23h 59m 32s---</p>
-            <p class="timer-label">زمان تا پاداش بعدی</p>
-        </div>
-        
-        <button class="claim-btn" id="claim-btn">
-            <span class="claim-text">دریافت پاداش</span>
-            <span class="claim-icon">🎁</span>
-        </button>
-        
-        <div class="booster-box">
-            <p class="booster-text">تقویت کننده 4000%</p>
-            <div class="stats">
-                <p>نرخ پایه: <span>3.32</span></p>
-                <p>ضریب تقویت: <span>390%</span></p>
-            </div>
-        </div>
+    
+    <div class="card">
+      <h3>کوئست روزانه</h3>
+      <p>3 کوئست جدید برای امروز دارید</p>
+      <button onclick="window.location.href='quest.html'">مشاهده کوئست‌ها</button>
     </div>
-
-    <script src="script.js"></script>
+  </div>
+  
+  <!-- تب بار پایین -->
+  <div class="tab-bar">
+    <a href="index.html" class="tab">
+      <i class="fas fa-home"></i>
+      <span>خانه</span>
+    </a>
+    <a href="quest.html" class="tab">
+      <i class="fas fa-tasks"></i>
+      <span>کوئست‌ها</span>
+    </a>
+    <a href="wallet.html" class="tab">
+      <i class="fas fa-wallet"></i>
+      <span>کیف پول</span>
+    </a>
+    <a href="profile.html" class="tab">
+      <i class="fas fa-user"></i>
+      <span>پروفایل</span>
+    </a>
+  </div>
+  
+  <script src="index.js"></script>
 </body>
 </html>
