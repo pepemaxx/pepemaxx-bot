@@ -1,24 +1,40 @@
-const { Telegraf } = require("telegraf");
+const express = require('express');
+const { Telegraf } = require('telegraf');
+const path = require('path');
+
+const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
+// سرویس فایل‌های استاتیک
+app.use(express.static(path.join(__dirname, 'web')));
+
+// روت‌های وب
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'web', 'index.html'));
+});
+
+app.get('/wallet', (req, res) => {
+  res.sendFile(path.join(__dirname, 'web', 'wallet.html'));
+});
+
+// دستورات تلگرام
 bot.start((ctx) => {
-  ctx.reply(`سلام ${ctx.from.first_name}! به بازی PepeMaxx خوش آمدید!`, {
+  ctx.reply('به بازی ما خوش آمدید!', {
     reply_markup: {
-      inline_keyboard: [
-        [{ 
-          text: "🚀 ورود به بازی", 
-          web_app: { url: "https://pepemaxx-bot.vercel.app/web" } 
-        }]
-      ]
+      keyboard: [
+        [{ text: "📱 بازکردن وب اپ" }],
+        [{ text: "💰 کیف پول" }, { text: "🎯 کوئست‌ها" }]
+      ],
+      resize_keyboard: true
     }
   });
 });
 
-module.exports = async (req, res) => {
-  if (req.method === "POST") {
-    await bot.handleUpdate(req.body);
-    res.status(200).send("OK");
-  } else {
-    res.status(200).send("Use POST for Telegram updates!");
-  }
-};
+// راه‌اندازی سرور
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// راه‌اندازی ربات
+bot.launch();
