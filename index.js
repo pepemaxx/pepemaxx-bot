@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler
 import logging
-
+ 
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "توکن باتت که از BotFather گرفتی"
