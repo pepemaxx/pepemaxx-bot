@@ -1,40 +1,26 @@
-const express = require('express');
-const { Telegraf } = require('telegraf');
-const path = require('path');
+from telegram.ext import Updater, CommandHandler
+import logging
 
-const app = express();
-const bot = new Telegraf(process.env.BOT_TOKEN);
+logging.basicConfig(level=logging.INFO)
 
-// سرویس فایل‌های استاتیک
-app.use(express.static(path.join(__dirname, 'web')));
+BOT_TOKEN = "توکن باتت که از BotFather گرفتی"
 
-// روت‌های وب
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'web', 'index.html'));
-});
+def start(update, context):
+    args = context.args
+    referral_id = args[0] if args else None
 
-app.get('/wallet', (req, res) => {
-  res.sendFile(path.join(__dirname, 'web', 'wallet.html'));
-});
+    if referral_id:
+        # اینجا referral_id رو داری
+        # می‌تونی کاربر رو به Mini App با referral بفرستی
+        frontend_url = f"https://your-frontend-url.com?referral={referral_id}"
+        update.message.reply_text(
+            f"خوش اومدی! برای ادامه بازی کلیک کن:\n{frontend_url}"
+        )
+    else:
+        update.message.reply_text("سلام! برای شروع روی دکمه زیر کلیک کن 👇")
 
-// دستورات تلگرام
-bot.start((ctx) => {
-  ctx.reply('به بازی ما خوش آمدید!', {
-    reply_markup: {
-      keyboard: [
-        [{ text: "📱 بازکردن وب اپ" }],
-        [{ text: "💰 کیف پول" }, { text: "🎯 کوئست‌ها" }]
-      ],
-      resize_keyboard: true
-    }
-  });
-});
+updater = Updater(BOT_TOKEN)
+dp = updater.dispatcher
+dp.add_handler(CommandHandler("start", start))
 
-// راه‌اندازی سرور
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-// راه‌اندازی ربات
-bot.launch();
+updater.start_polling()
