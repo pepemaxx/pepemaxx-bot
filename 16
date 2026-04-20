@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiProtocol – Daily Mining</title>
+  <style>
+/* ====== Theme ====== */
+:root{
+  --bg1:#4c1d95; --bg2:#7b2cbf; --ink:#fff; --muted:#cbd5e1;
+  --brand:#f1c40f; --border:rgba(255,255,255,.18); --card:rgba(255,255,255,.08);
+  --good:#10b981; --warn:#f59e0b; --danger:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink); font-family:Inter, Vazirmatn, Segoe UI, Roboto, system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 1200px at 70% -10%, rgba(255,255,255,.12), transparent 40%),
+              linear-gradient(180deg,var(--bg1),var(--bg2));
+  overflow:hidden;
+}
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(400px 400px at 50% 30%, rgba(255,255,255,.12), transparent 60%),
+    url('https://i.imgur.com/8L1Xk6D.png') center 24%/280px no-repeat;
+  opacity:.06; filter: saturate(1.2);
+}
+#app{position:relative; z-index:1; height:100%; display:flex; flex-direction:column}
+header{
+position:sticky; top:0; z-index:5; background:rgba(0,0,0,.18); backdrop-filter:blur(10px);
+border-bottom:1px solid var(--border); padding:12px 16px; display:flex; align-items:center; justify-content:space-between
+}
+.title{font-weight:900; font-size:18px; letter-spacing:.2px}
+.sub{font-size:12px; color:var(--muted)}
+main{flex:1; overflow-y:auto; padding:16px 16px 100px; max-width:980px; margin:0 auto; width:100%}
+
+/* Cards */
+.card{
+background:var(--card); border:1px solid var(--border); border-radius:18px; padding:16px;
+box-shadow: 0 8px 30px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.04);
+backdrop-filter: blur(8px);
+}
+.row{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap}
+.grid-2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px}
+.grid-3{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px}
+@media (max-width:720px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+
+.big{font-size:28px; font-weight:900}
+.kicker{font-size:12px; letter-spacing:.6px; color:var(--muted); font-weight:800; text-transform:uppercase}
+.muted{color:var(--muted); font-size:12px}
+.accent{color:var(--brand)}
+
+/* Buttons & Inputs */
+.btn{border:none; border-radius:14px; padding:10px 14px; font-weight:800; cursor:pointer; transition:transform .05s ease, filter .2s}
+.btn:active{transform: translateY(1px)}
+.btn-gold{background:linear-gradient(135deg,#fde047,#f59e0b); color:#3b0764}
+.btn-ghost{background:rgba(255,255,255,.10); color:#fff; border:1px solid var(--border)}
+.btn-danger{background:linear-gradient(135deg,#fca5a5,#ef4444); color:#3b0764}
+.btn:disabled{opacity:.6; cursor:not-allowed}
+
+input, select{
+background:rgba(255,255,255,.10); color:#fff; border:1px solid var(--border); border-radius:12px;
+padding:10px 12px; outline:none; width:100%
+}
+input::placeholder{color:#cbd5e1}
+.input-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+/* Status & progress */
+.pill{font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06)}
+.pill.good{background:rgba(16,185,129,.18); border-color:rgba(16,185,129,.4); color:#d1fae5}
+.pill.warn{background:rgba(245,158,11,.16); border-color:rgba(245,158,11,.45)}
+.pill.bad{background:rgba(239,68,68,.16); border-color:rgba(239,68,68,.45)}
+
+.progress{height:10px; border-radius:999px; background:rgba(255,255,255,.18); overflow:hidden}
+.progress>div{height:100%; background:linear-gradient(90deg,#fde047,#f59e0b); width:0%; transition: width .25s}
+
+/* Tabs bar */
+nav.tabs{position:fixed; left:0; right:0; bottom:0; border-top:1px solid var(--border); background:rgba(0,0,0,.22); backdrop-filter:blur(10px); z-index:5}
+.tabs-inner{max-width:980px; margin:0 auto; height:72px; display:grid; grid-template-columns:repeat(6,1fr)}
+.tab-btn{appearance:none; background:none; border:none; color:#e2e8f0; font-size:13px; display:flex; align-items:center; justify-content:center; gap:6px; flex-direction:column}
+.tab-btn .mini{font-size:11px; opacity:.85}
+.tab-btn.active{color:var(--brand)}
+section.tab{display:none}
+section.tab.active{display:block}
+
+/* Tables */
+.table{width:100%; border-collapse:collapse}
+.table th, .table td{padding:10px; border-bottom:1px solid var(--border); text-align:left}
+.table th{color:#f8fafc; font-weight:800; font-size:12px; opacity:.9}
+
+/* Badges */
+.badge{display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.08); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:12px}
+
+/* Nice section headers */
+.h3{font-size:16px; font-weight:900; margin:0 0 8px}
+.h2{font-size:18px; font-weight:900; margin:0 0 10px}
+
+/* Icon (inline) */
+.icon{width:18px; height:18px; opacity:.9}
+
+/* Share Modal */
+.share-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+.share-modal-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+}
+
+.share-apps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.share-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.share-app:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.share-app svg {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.share-app span {
+  font-size: 12px;
+}
+
+/* Referral Reward Animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.reward-animation {
+  animation: pulse 1.5s infinite;
+}
+
+/* Referral Levels */
+.referral-level {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 8px 0;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.referral-level.active {
+  border-color: var(--brand);
+  background: rgba(241,196,15,0.1);
+}
+
+.level-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  overflow: hidden;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.level-progress > div {
+  height: 100%;
+  background: linear-gradient(90deg,#fde047,#f59e0b);
+  transition: width .25s;
+}
+
+/* QR Code */
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.qr-code {
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+}
+</style>
+  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+ </head>
+ <body>
+  <div id="app">
+   <!-- Header -->
+   <header>
+    <div>
+     <div class="title">PiProtocol – Daily Mining</div>
+     <div class="sub">24h mining • Local persistence + API fallback</div>
+    </div>
+   </header>
+   <!-- Main -->
+   <main>
+    <!-- Mining -->
+    <section class="tab active" id="tab-mining">
+     <div class="card row">
+      <div>
+       <div class="kicker">Wallet Balance</div>
+       <div class="big">
+        <span id="balance">0</span> <span class="muted" style="font-size:14px">coins</span>
+       </div>
+      </div>
+      <div style="text-align:end">
+       <div class="kicker">Mining Status</div>
+       <div id="miningStatus" class="pill">Inactive</div>
+      </div>
+     </div>
+     <div class="card">
+      <div class="row" style="align-items:flex-end">
+       <div>
+        <div class="kicker">Time remaining</div>
+        <div id="timer" class="big">00:00:00</div>
+       </div>
+       <div style="text-align:end">
+        <div class="kicker">Session earnings</div>
+        <div class="big accent">
+         <span id="sessionEarnings">0</span> coins
+        </div>
+       </div>
+      </div>
+      <div class="progress" style="margin-top:10px">
+       <div id="progressBar"></div>
+      </div>
+      <div class="row" style="margin-top:12px">
+       <button id="startBtn" class="btn btn-gold">Start 24h</button>
+       <button id="claimBtn" class="btn btn-ghost" disabled>Finish &amp; Claim</button>
+      </div>
+      <div class="muted" style="margin-top:8px">
+       Rate: <b id="rateText">0.002</b> coin/sec • Press <b>Start</b> to begin the timer from the beginning.
+      </div>
+     </div>
+     <!-- News -->
+     <div class="card">
+      <div class="row" style="justify-content:space-between">
+       <div class="h2">News</div>
+       <div class="badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+         <path d="M4 4h13a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V4z" /><path d="M8 8h8M8 12h8M8 16h6" stroke="#000" stroke-opacity=".28" />
+        </svg>
+        Latest
+       </div>
+      </div>
+      <ul id="newsList" style="margin:6px 0 0 0; padding:0; list-style:none"></ul>
+     </div>
+    </section>
+    <!-- Wallet -->
+    <section class="tab" id="tab-wallet">
+     <div class="grid-3">
+      <div class="card">
+       <div class="kicker">Coins</div>
+       <div class="big">
+        <span id="coinsBalance">0</span>
+       </div>
+      </div>
+      <div class="card">
+       <div class="kicker">PiP</div>
+       <div class="big">
+        <span id="piBalance">0.00</span>
+       </div>
+      </div>
+      <div class="card">
+       <div class="kicker">USDT</div>
+       <div class="big">
+        <span id="usdtBalance">0.00</span>
+       </div>
+      </div>
+     </div>
+     <div class="grid-2" style="margin-top:12px">
+      <!-- Convert Coins -> Pi -->
+      <div class="card">
+       <div class="h3">🔄 Convert Coins → PiP</div>
+       <div class="muted" style="margin-bottom:6px">
+        Display rate: <b id="coinsPerPi">100</b>coins = 1 PiP
+       </div>
+       <div class="input-row">
+        <input id="coinsToPiAmt" type="number" min="0" step="1" placeholder="Coin amount">
+        <button id="coinsToPiBtn" class="btn btn-gold">Convert</button>
+       </div>
+       <div id="coinsToPiHint" class="muted" style="margin-top:6px"></div>
+      </div>
+      <!-- Convert Pi -> USDT -->
+      <div class="card">
+       <div class="h3">💰 Convert PiP → USDT</div>
+       <div class="muted" style="margin-bottom:6px">
+        Display rate: 1PiP = <b id="usdtPerPi">5</b> USDT
+       </div>
+       <div class="input-row">
+        <input id="piToUsdtAmt" type="number" min="0" step="0.01" placeholder="PiP amount">
+        <button id="piToUsdtBtn" class="btn btn-gold">Convert</button>
+       </div>
+       <div id="piToUsdtHint" class="muted" style="margin-top:6px"></div>
+      </div>
+     </div>
+     <!-- Withdraw -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">🏦 Withdraw</div>
+      <div class="grid-3">
+       <div>
+        <div class="muted">Asset Type</div>
+        <select id="withdrawAsset"> <option value="pi">PiP</option> <option value="usdt">USDT</option> </select>
+       </div>
+       <div>
+        <div class="muted">Wallet Address</div>
+        <input id="withdrawAddr" placeholder="e.g., Pi wallet / TRON / ERC-20">
+       </div>
+       <div>
+        <div class="muted">Amount</div>
+        <input id="withdrawAmt" type="number" min="0" step="0.01" placeholder="Amount">
+       </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+       <button id="withdrawBtn" class="btn btn-gold">Submit Request</button>
+       <div class="muted">For actual processing, server-side confirmation is required.</div>
+      </div>
+     </div>
+     <!-- Transactions -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">Transactions</div>
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Description</th>
+         <th>Amount</th>
+         <th>Time</th>
+        </tr>
+       </thead>
+       <tbody id="txList"></tbody>
+      </table>
+      <div id="noTx" class="muted" style="margin-top:6px">No transactions yet.</div>
+     </div>
+    </section>
+    <!-- Friends -->
+    <section class="tab" id="tab-friends">
+     <div class="card">
+      <div class="h3">Your Referral Link</div>
+      <div id="refLink" class="muted" style="word-break:break-all;background:rgba(255,255,255,.08);border:1px dashed var(--border);padding:10px;border-radius:12px"></div>
+      <div class="qr-code-container">
+        <div id="qrCode" class="qr-code"></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+       <button id="copyRef" class="btn btn-gold">Copy Link</button>
+       <button id="shareRef" class="btn btn-ghost">Share</button>
+      </div>
+     </div>
+     <div class="grid-3" style="margin-top:12px">
+      <div class="card">
+       <div class="kicker">Invited</div>
+       <div class="big" id="friendsInvited">0</div>
+      </div>
+      <div class="card">
+       <div class="kicker">Active</div>
+       <div class="big" id="friendsActive">0</div>
+      </div>
+      <div class="card">
+       <div class="kicker">Reward</div>
+       <div class="big accent" id="referralReward">0 coins</div>
+      </div>
+     </div>
+     <!-- Referral Levels -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">Referral Program</div>
+      <div class="muted" style="margin-bottom:10px">Invite friends and earn rewards as they become active miners!</div>
+      
+      <div id="referralLevels">
+        <!-- Levels will be populated by JavaScript -->
+      </div>
+     </div>
+     <!-- Invited Friends List -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">Invited Friends</div>
+      <table class="table" id="invitedFriendsTable">
+       <thead>
+        <tr>
+         <th>User</th>
+         <th>Invite Date</th>
+         <th>Status</th>
+        </tr>
+       </thead>
+       <tbody></tbody>
+      </table>
+      <div id="invitedFriendsMessage" class="muted" style="margin-top:6px">Earn rewards for each friend who joins and becomes active</div>
+     </div>
+     <!-- Active Friends List -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">Active Friends</div>
+      <table class="table" id="activeFriendsTable">
+       <thead>
+        <tr>
+         <th>User</th>
+         <th>Activation Date</th>
+         <th>Speed Boost</th>
+        </tr>
+       </thead>
+       <tbody></tbody>
+      </table>
+      <div class="muted" style="margin-top:6px">
+       Mining speed increase: <b>+0.001</b> per active friend
+      </div>
+     </div>
+<!-- Leaderboard -->
+<div class="card" style="margin-top:12px">
+  <div class="h3">Leaderboard (Top 10)</div>
+  <table class="table" id="leaderTable">
+   <thead>
+    <tr>
+     <th>#</th>
+     <th>User</th>
+     <!-- حذف ستون Coins -->
+    </tr>
+   </thead>
+   <tbody></tbody>
+  </table>
+  <div class="muted" style="margin-top:6px">
+   Your rank: <b id="myRank">#—</b>
+  </div>
+</div>
+    </section>
+    <!-- Tasks -->
+    <section class="tab" id="tab-tasks">
+     <div class="card">
+      <div class="h3">Daily &amp; Social Tasks</div>
+      <div id="tasksWrap"></div>
+      <div class="muted" style="margin-top:6px">* To verify task completion, server-side confirmation is required.</div>
+     </div>
+     <div class="card" style="margin-top:12px">
+      <div class="h3">⚒ Manual Mining</div>
+      <div class="row">
+       <div class="muted">+0.5 coin per click (10s Cooldown)</div>
+       <button id="manualMineBtn" class="btn btn-gold">Mine +0.5</button>
+      </div>
+      <div id="manualCooldown" class="muted" style="margin-top:6px"></div>
+     </div>
+    </section>
+    <!-- Profile -->
+    <section class="tab" id="tab-profile">
+     <div class="card">
+      <div class="h3">Profile</div>
+      <div class="input-row" style="margin-top:6px">
+       <input id="firstName" placeholder="First Name"> <input id="lastName" placeholder="Last Name">
+      </div>
+      <div style="margin-top:10px">
+       <div class="muted">User ID (7-digit, cannot be changed)</div>
+       <div id="userIdDisplay" style="background:rgba(255,255,255,.08);border:1px solid var(--border);padding:10px;border-radius:12px;font-weight:bold;margin-top:5px;text-align:center"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+       <button id="saveProfile" class="btn btn-gold">Save Profile</button>
+      </div>
+      <div class="muted" style="margin-top:6px">Information is saved locally on this device. User ID is permanent and cannot be changed.</div>
+     </div>
+     <!-- Referrer Information -->
+     <div class="card" style="margin-top:12px">
+      <div class="h3">Referrer Information</div>
+      <div id="referrerInfo" style="background:rgba(255,255,255,.08);border:1px solid var(--border);padding:10px;border-radius:12px;margin-top:5px;">
+        <div id="noReferrer" class="muted">You weren't invited by anyone.</div>
+        <div id="hasReferrer" style="display:none;">
+          <div>You were invited by: <span id="referrerName" style="font-weight:bold;"></span></div>
+          <div class="muted" style="margin-top:5px;">Invitation date: <span id="referrerDate"></span></div>
+        </div>
+      </div>
+     </div>
+    </section>
+   </main>
+   <!-- Tabs bar -->
+   <nav class="tabs">
+    <div class="tabs-inner">
+ <button class="tab-btn active" data-tab="mining">Mining <span class="mini">24h</span></button>
+ <button class="tab-btn" data-tab="wallet">Wallet <span class="mini">Convert</span></button>
+ <button class="tab-btn" data-tab="invest">Invest <span class="mini">Plans</span></button>
+ <button class="tab-btn" data-tab="friends">Friends <span class="mini">Rank</span></button>
+ <button class="tab-btn" data-tab="tasks">Tasks <span class="mini">Daily</span></button>
+ <button class="tab-btn" data-tab="profile">Profile <span class="mini">You</span></button>
+</div>
+    </div>
+   </nav>
+  </div>
+  <!-- Share Modal -->
+  <div id="shareModal" class="share-modal">
+   <div class="share-modal-content">
+    <div class="h3">Share Referral Link</div>
+    <div class="muted">Share your referral link using the apps below</div>
+    <div class="share-apps">
+     <div class="share-app" data-app="whatsapp">
+      <svg viewBox="0 0 24 24" fill="#25D366">
+       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.864 3.488" />
+      </svg>
+      <span>WhatsApp</span>
+     </div>
+     <div class="share-app" data-app="telegram">
+      <svg viewBox="0 0 24 24" fill="#0088cc">
+       <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.136-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+      </svg>
+      <span>Telegram</span>
+     </div>
+     <div class="shar
